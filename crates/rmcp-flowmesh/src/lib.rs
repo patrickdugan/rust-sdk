@@ -459,7 +459,12 @@ fn evidence_handle(identity: &Identity, json: &str) -> Result<String, MeshError>
 }
 
 fn sha256(bytes: &[u8]) -> String {
-    format!("{:x}", Sha256::digest(bytes))
+    use std::fmt::Write as _;
+    let mut out = String::with_capacity(64);
+    for byte in Sha256::digest(bytes) {
+        write!(&mut out, "{byte:02x}").expect("formatting a String cannot fail");
+    }
+    out
 }
 
 fn make_receipt(
