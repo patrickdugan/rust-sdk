@@ -14,9 +14,9 @@ use std::{
 };
 
 use rmcp::{
+    RoleClient,
     model::{CallToolRequestParams, CallToolResult, JsonObject},
     service::Peer,
-    RoleClient,
 };
 use serde::Serialize;
 use sha2::{Digest, Sha256};
@@ -305,7 +305,8 @@ impl FlowMesh {
             if let Some((handle, expires)) = state.cache.get(&key).cloned() {
                 if expires > Instant::now() {
                     if let Some(evidence) = state.evidence.get(&handle) {
-                        let receipt = make_receipt(&self.config, &plan.route, &handle, evidence, true)?;
+                        let receipt =
+                            make_receipt(&self.config, &plan.route, &handle, evidence, true)?;
                         state.metrics.cache_hits += 1;
                         state.metrics.model_receipt_bytes += receipt.delivered_bytes as u64;
                         return Ok(receipt);
@@ -339,7 +340,9 @@ impl FlowMesh {
                 .filter(|(_, value)| &value.identity == identity)
                 .map(|(handle, _)| handle.clone())
                 .collect();
-            state.cache.retain(|_, (handle, _)| !invalidated.contains(handle));
+            state
+                .cache
+                .retain(|_, (handle, _)| !invalidated.contains(handle));
         }
         if !state.evidence.contains_key(&handle) {
             state.insertion_order.push_back(handle.clone());
@@ -370,8 +373,8 @@ impl FlowMesh {
         arguments: &JsonObject,
         peer: &Peer<RoleClient>,
     ) -> Result<FlowReceipt, MeshError> {
-        let params = CallToolRequestParams::new(plan.route.tool.clone())
-            .with_arguments(arguments.clone());
+        let params =
+            CallToolRequestParams::new(plan.route.tool.clone()).with_arguments(arguments.clone());
         self.execute(identity, plan, arguments, || peer.call_tool(params))
             .await
     }
