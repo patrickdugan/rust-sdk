@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/rmcp", "crates/rmcp-macros", "examples/*", "conformance"]
+members = ["crates/rmcp", "crates/rmcp-macros", "crates/rmcp-flowmesh", "examples/*", "conformance"]
 default-members = ["crates/rmcp", "crates/rmcp-macros"]
 # Virtual workspaces default to resolver 1 regardless of members' edition.
 resolver = "3"

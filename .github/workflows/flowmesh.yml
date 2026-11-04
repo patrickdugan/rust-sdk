@@ -1,0 +1,27 @@
+name: FlowMesh gateway
+on:
+  push:
+    paths:
+      - 'Cargo.toml'
+      - 'crates/rmcp-flowmesh/**'
+      - '.github/workflows/flowmesh.yml'
+  pull_request:
+    paths:
+      - 'Cargo.toml'
+      - 'crates/rmcp-flowmesh/**'
+      - '.github/workflows/flowmesh.yml'
+  workflow_dispatch:
+jobs:
+  flowmesh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: '1.96'
+          components: rustfmt
+      - uses: Swatinem/rust-cache@v2
+      - name: Test FlowMesh
+        run: cargo test -p rmcp-flowmesh
+      - name: Check FlowMesh formatting
+        run: cargo fmt --package rmcp-flowmesh -- --check
